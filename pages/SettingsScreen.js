@@ -4,10 +4,13 @@ import {
     StyleSheet,
     View,
     Text,
-    SafeAreaView
+    SafeAreaView,
+    Button
 } from 'react-native';
+import { NavigationContext } from '@react-navigation/native';
 
-const SettingsScreen = ({ route, navigation }) => {
+const SettingsScreen = ({ navigation }) => {
+    const { AuthContext } = React.useContext(NavigationContext);
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1, padding: 16 }}>
@@ -60,6 +63,7 @@ const SettingsScreen = ({ route, navigation }) => {
                         }>
                         <Text>Scan Qr</Text>
                     </TouchableOpacity>
+                    <Button title="Sign out" onPress={() => AuthContext()} />
                 </View>
                 <Text
                     style={{
