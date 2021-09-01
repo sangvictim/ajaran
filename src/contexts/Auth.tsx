@@ -6,7 +6,7 @@ import { AuthData, authService } from '../services/authService';
 type AuthContextData = {
     authData?: AuthData;
     loading: boolean;
-    signIn(): Promise<void>;
+    signIn(username: string, password: string): Promise<void>;
     signOut(): void;
 };
 
@@ -45,13 +45,10 @@ const AuthProvider: React.FC = ({ children }) => {
         }
     }
 
-    const signIn = async () => {
+    const signIn = async (username: string, password: string) => {
         //call the service passing credential (email and password).
         //In a real App this data will be provided by the user from some InputText components.
-        const _authData = await authService.signIn(
-            'sangvictim@email.com',
-            '123456',
-        );
+        const _authData = await authService.signIn(username, password);
 
         //Set the data in the context, so the App can be notified
         //and send the user to the AuthStack

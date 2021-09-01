@@ -1,19 +1,25 @@
+import apiCall from "../../utils/apiCall";
+
 export type AuthData = {
-    token: string;
-    email: string;
-    name: string;
+    token?: string;
 };
-const signIn = (email: string, _password: string): Promise<AuthData> => {
+const signIn = (username: string, password: string): Promise<AuthData> => {
     // this is a mock of an API call, in a real app
     // will be need connect with some real API,
     // send email and password, and if credential is corret
     //the API will resolve with some token and another datas as the below
     return new Promise((resolve) => {
+        // apiCall.post('todos', {
+        //     username: username,
+        //     password: password
+        // }).then(res => {
+
+        // })
+        console.log(username);
+        console.log(password);
         setTimeout(() => {
             resolve({
                 token: JWTTokenMock,
-                email: email,
-                name: 'Mas Kriwil',
             });
         }, 1000);
     });
