@@ -1,8 +1,7 @@
 import React, { useReducer } from 'react'
 
-
-const useMultiState = (...initialState: any) => {
-    const reducer = (state: any, payload: any) => ({ ...state, ...payload })
+const useMultiState = <T extends {}>(initialState: T) => {
+    const reducer = (state: T, payload: Partial<T>) => ({ ...state, ...payload })
     return useReducer(reducer, initialState)
 }
 

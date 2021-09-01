@@ -15,7 +15,7 @@ const SignInScreen = () => {
         <View>
             <Text>Sign In Screen</Text>
             {loading ? (
-                <ActivityIndicator color={'#000'} animating={true} size="small" />
+                <ActivityIndicator color={'#000'} animating={true} size="large" />
             ) : (
                 <Button title="Sign In" onPress={signIn} />
             )}
