@@ -20,8 +20,7 @@
     "react-native-qrcode-svg": "^6.1.1",
     "react-native-safe-area-context": "^3.3.0",
     "react-native-screens": "^3.6.0",
-    "react-native-svg": "^12.1.1",
-    "reactn": "^2.2.7"
+    "react-native-svg": "^12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -40,6 +39,7 @@
     "react-native-qrcode-scanner": "^1.5.4",
     "react-native-svg-transformer": "^0.14.3",
     "react-test-renderer": "17.0.2",
+    "reactn": "^2.2.7",
     "typescript": "^3.8.3"
   },
   "resolutions": {

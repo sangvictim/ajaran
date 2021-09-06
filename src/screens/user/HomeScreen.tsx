@@ -1,29 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'reactn';
 import { Button, Text, TextInput, View } from 'react-native';
-import useMultiState from '../../../utils/useMultiState';
 
-import { useAuth } from '../../contexts/Auth';
+import { AuthContext } from '../../contexts/Contexts';
+import apiCall from '../../../utils/apiCall';
 
-import apiCall from '../../../utils/apiCall'
-import URL from '../../../utils/url';
-
-type TStatus = 'active' | 'nonactive'
-interface IState {
-    isAktive: boolean
-    status: TStatus
-}
 export const HomeScreen = () => {
-    const auth = useAuth();
-    const [state, setState] = useMultiState<IState>({
-        isAktive: true,
-        status: 'active'
-    })
+    const { signOut }: any = React.useContext(AuthContext);
+    const signout = () => {
+        signOut.signOut()
+    }
+    const [data, setData] = useState()
 
+    useEffect(() => {
+        apiCall('GET', 'master/category')
+            .then(res => {
+                console.log('responsi:' + JSON.stringify(res));
+
+            })
+            .catch(err => {
+                console.log('home: ' + JSON.stringify(err));
+
+            })
+
+    }, [])
     return (
         <View>
             <Text>HOME SCREEN</Text>
-            <Text>Token: {auth.authData?.token}</Text>
-            <Button title="Sign Out" onPress={() => { auth.signOut() }} />
+            <Text>{data}</Text>
+            <Button title="Sign out" onPress={() => signOut()} />
         </View>
     );
 };
