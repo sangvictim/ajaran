@@ -1,15 +1,38 @@
 import React from 'react'
-import { Button, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
+import display from '../../utils/display';
 import Label from './Label';
 
-const text = (props: any) => {
+type typeInput = 'default' | 'numeric' | 'password'
+
+const text: React.FC<{
+    label: string,
+    value: any,
+    onChangeText: any
+    placeholder?: string,
+    type?: typeInput,
+
+}> = ({ label, placeholder, type, value, onChangeText }) => {
     return (
         <View>
-            <Label label={props.title} />
-            <TextInput placeholder={props.placeholder ? props.placeholder : props.title} />
+            <Label label={label} />
+            <TextInput
+                placeholder={placeholder ? placeholder : label}
+                value={value}
+                onChangeText={onChangeText}
+                keyboardType={type == 'password' ? 'default' : type}
+                secureTextEntry={type == 'password' ? true : false}
+
+            />
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    textStyle: {
+        fontSize: display(12)
+    }
+})
 
 const Input = {
     text

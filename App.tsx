@@ -24,6 +24,36 @@ const App = () => {
   const [global, setGlobal] = useGlobal();
   const [loading, isLoading] = React.useState(true)
 
+  const [state, dispatch] = React.useReducer(
+    (prevState: any, action: any) => {
+      switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...prevState,
+            userToken: action.token,
+            isLoading: false,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            isSignout: false,
+            userToken: action.token,
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            isSignout: true,
+            userToken: null,
+          };
+      }
+    },
+    {
+      isLoading: true,
+      isSignout: false,
+      userToken: null,
+    }
+  );
+
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
@@ -54,25 +84,27 @@ const App = () => {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (username: any, password: any) => {
+      signIn: (username: any, password: any) => {
         let data = {
           'login': username,
           'password': password,
         }
-        await apiCall('POST', 'auth/login', data)
+        apiCall('POST', 'auth/login', data)
           .then(res => {
             const userToken = AsyncStorage.setItem('userToken', res.data.access_token)
             setGlobal({
               userToken: res.data.access_token
             })
+            dispatch({ type: 'SIGN_IN', token: userToken });
           })
           .catch(err => {
             Alert.alert('Perhatian', 'harap ini form dengan benar')
           })
       },
-      signOut: async (): Promise<any> => {
+      signOut: () => {
         resetGlobal()
-        await AsyncStorage.clear()
+        AsyncStorage.clear()
+        dispatch({ type: 'SIGN_OUT' })
       },
       signUp: async (data: any) => {
         // In a production app, we need to send user data to server and get a token
@@ -101,6 +133,7 @@ const App = () => {
             initialRouteName="Feed"
             screenOptions={{
               tabBarShowLabel: false,
+              tabBarHideOnKeyboard: true
             }}>
             <Tab.Screen
               name="HomeStack"

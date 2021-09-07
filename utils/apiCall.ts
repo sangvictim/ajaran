@@ -14,7 +14,11 @@ const apiCall = async (method: typeMethod, url: string, data?: Partial<object> |
         method: method,
         url: url,
         data: data,
-        params: param
+        params: param,
+        onUploadProgress: function (progressEvent) {
+            var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            console.log(percentCompleted)
+        }
     });
 }
 

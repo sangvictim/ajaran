@@ -27,8 +27,8 @@ export const HomeScreen = () => {
     return (
         <View>
             <Text>HOME SCREEN</Text>
-            <Text>{data}</Text>
-            <Input.text title="ini titlenya" />
+            <Text>ini hasil text input: {data}</Text>
+            <Input.text label="ini label nya" value={data} onChangeText={(data: any) => setData(data)} />
             <Button title="Sign out" onPress={() => signOut()} />
         </View>
     );
