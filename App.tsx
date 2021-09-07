@@ -1,4 +1,4 @@
-import React, { useGlobal, resetGlobal } from 'reactn';
+import React, { useGlobal, resetGlobal, getGlobal } from 'reactn';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -16,7 +16,6 @@ import { HomeScreen } from './src/screens/user/HomeScreen';
 import HomeIcon from './icon/home.svg';
 import apiCall from './utils/apiCall';
 import { Alert } from 'react-native';
-import axios from 'axios';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,33 +23,6 @@ const Tab = createBottomTabNavigator();
 const App = () => {
   const [global, setGlobal] = useGlobal();
   const [loading, isLoading] = React.useState(true)
-  const [state, dispatch] = React.useReducer(
-    (prevState: any, action: any) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            userToken: action.token,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isSignout: false,
-      userToken: null,
-    }
-  );
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -59,8 +31,9 @@ const App = () => {
 
       try {
         userToken = await AsyncStorage.getItem('userToken')
-        console.log('token: ' + userToken);
-
+        setGlobal({
+          userToken: userToken
+        })
       } catch (e) {
         // Restoring token failed
       }
@@ -69,7 +42,7 @@ const App = () => {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+      // dispatch({ type: 'RESTORE_TOKEN', token: userToken });
     };
 
     setTimeout(() => {
@@ -82,12 +55,6 @@ const App = () => {
   const authContext = React.useMemo(
     () => ({
       signIn: async (username: any, password: any) => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
-
-
         let data = {
           'login': username,
           'password': password,
@@ -98,18 +65,14 @@ const App = () => {
             setGlobal({
               userToken: res.data.access_token
             })
-            dispatch({ type: 'SIGN_IN', token: userToken });
           })
           .catch(err => {
-            Alert.alert('Perhatian', 'harap langkapi form brikut')
+            Alert.alert('Perhatian', 'harap ini form dengan benar')
           })
-
-
       },
       signOut: async (): Promise<any> => {
         resetGlobal()
         await AsyncStorage.clear()
-        dispatch({ type: 'SIGN_OUT' })
       },
       signUp: async (data: any) => {
         // In a production app, we need to send user data to server and get a token
@@ -117,7 +80,7 @@ const App = () => {
         // After getting token, we need to persist the token using `SecureStore`
         // In the example, we'll use a dummy token
 
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        // dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
       },
     }),
     []
@@ -131,7 +94,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <AuthContext.Provider value={authContext}>
-        {state.userToken == null ? (
+        {getGlobal().userToken == null ? (
           <AuthStack />
         ) : (
           <Tab.Navigator

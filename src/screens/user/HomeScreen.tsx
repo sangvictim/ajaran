@@ -3,6 +3,7 @@ import { Button, Text, TextInput, View } from 'react-native';
 
 import { AuthContext } from '../../contexts/Contexts';
 import apiCall from '../../../utils/apiCall';
+import Input from '../../componen/Input';
 
 export const HomeScreen = () => {
     const { signOut }: any = React.useContext(AuthContext);
@@ -12,21 +13,22 @@ export const HomeScreen = () => {
     const [data, setData] = useState()
 
     useEffect(() => {
-        apiCall('GET', 'master/category')
-            .then(res => {
-                console.log('responsi:' + JSON.stringify(res));
+        // apiCall('GET', 'master/category')
+        //     .then(res => {
+        //         console.log('responsi:' + JSON.stringify(res));
 
-            })
-            .catch(err => {
-                console.log('home: ' + JSON.stringify(err));
+        //     })
+        //     .catch(err => {
+        //         console.log('home: ' + JSON.stringify(err));
 
-            })
+        //     })
 
     }, [])
     return (
         <View>
             <Text>HOME SCREEN</Text>
             <Text>{data}</Text>
+            <Input.text title="ini titlenya" />
             <Button title="Sign out" onPress={() => signOut()} />
         </View>
     );
