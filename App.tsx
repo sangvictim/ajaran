@@ -55,6 +55,11 @@ const App = () => {
   );
 
   React.useEffect(() => {
+
+    setGlobal({
+      userToken: null,
+      errors: {}
+    })
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let userToken;
@@ -98,6 +103,8 @@ const App = () => {
             dispatch({ type: 'SIGN_IN', token: userToken });
           })
           .catch(err => {
+            console.log('arros' + JSON.stringify(err));
+
             Alert.alert('Perhatian', 'harap ini form dengan benar')
           })
       },

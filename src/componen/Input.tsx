@@ -1,18 +1,20 @@
-import React from 'react'
-import { StyleSheet, TextInput, View } from 'react-native';
+import React, { useGlobal } from 'reactn'
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import display from '../../utils/display';
 import Label from './Label';
 
 type typeInput = 'default' | 'numeric' | 'password'
 
 const text: React.FC<{
+    name: string,
     label: string,
     value: any,
     onChangeText: any
     placeholder?: string,
     type?: typeInput,
 
-}> = ({ label, placeholder, type, value, onChangeText }) => {
+}> = ({ name, label, placeholder, type, value, onChangeText }) => {
+    const [global, setGlobal] = useGlobal();
     return (
         <View>
             <Label label={label} />
@@ -24,6 +26,10 @@ const text: React.FC<{
                 secureTextEntry={type == 'password' ? true : false}
 
             />
+            {global.errors[name] && (
+                <Text>{global.errors[name].message}</Text>
+            )}
+            {/* <Text>{Object.keys((global.errors))[name]}</Text> */}
         </View>
     )
 }

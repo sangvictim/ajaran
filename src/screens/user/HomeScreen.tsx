@@ -13,22 +13,22 @@ export const HomeScreen = () => {
     const [data, setData] = useState()
 
     useEffect(() => {
-        // apiCall('GET', 'master/category')
-        //     .then(res => {
-        //         console.log('responsi:' + JSON.stringify(res));
+        apiCall('POST', 'master/category')
+            .then(res => {
+                setData(res.data)
+                console.log('responsi:' + JSON.stringify(res));
 
-        //     })
-        //     .catch(err => {
-        //         console.log('home: ' + JSON.stringify(err));
+            }).catch(err => {
+                console.log(JSON.stringify(err));
 
-        //     })
-
+            })
     }, [])
     return (
         <View>
             <Text>HOME SCREEN</Text>
             <Text>ini hasil text input: {data}</Text>
-            <Input.text label="ini label nya" value={data} onChangeText={(data: any) => setData(data)} />
+            <Input.text name="product_category_code" label="ini label nya" value={data} onChangeText={(data: any) => setData(data)} />
+            <Input.text name="product_category_name" label="ini label nya" value={data} onChangeText={(data: any) => setData(data)} />
             <Button title="Sign out" onPress={() => signOut()} />
         </View>
     );
