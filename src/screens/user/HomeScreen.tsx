@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'reactn';
 import { Button, Text, TextInput, View } from 'react-native';
 
-import { AuthContext } from '../../contexts/Contexts';
 import apiCall from '../../../utils/apiCall';
 import Input from '../../componen/Input';
 
 export const HomeScreen = () => {
-    const { signOut }: any = React.useContext(AuthContext);
-    const signout = () => {
-        signOut.signOut()
-    }
     const [data, setData] = useState()
 
     useEffect(() => {
@@ -27,9 +22,6 @@ export const HomeScreen = () => {
         <View>
             <Text>HOME SCREEN</Text>
             <Text>ini hasil text input: {data}</Text>
-            <Input.text name="product_category_code" label="ini label nya" value={data} onChangeText={(data: any) => setData(data)} />
-            <Input.text name="product_category_name" label="ini label nya" value={data} onChangeText={(data: any) => setData(data)} />
-            <Button title="Sign out" onPress={() => signOut()} />
         </View>
     );
 };

@@ -1,12 +1,9 @@
-import React, { useGlobal, resetGlobal, getGlobal } from 'reactn';
+import React, { useGlobal } from 'reactn';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AuthStack from './src/screens/auth/AuthStack';
-
 //context
-import { AuthContext } from './src/contexts/Contexts';
+// import { AuthContext } from './src/contexts/Contexts';
 
 //screen
 import SplashScreen from './src/screens/SplashScreen';
@@ -16,114 +13,62 @@ import { HomeScreen } from './src/screens/user/HomeScreen';
 import HomeIcon from './icon/home.svg';
 import apiCall from './utils/apiCall';
 import { Alert } from 'react-native';
+import SignInScreen from './src/screens/auth/SignInScreen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import RegisterScreen from './pages/auth/RegisterScreen';
+import ConfirmScreen from './src/screens/auth/ConfirmScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+function HomeTab() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarHideOnKeyboard: true
+      }}>
+      <Tab.Screen
+        name="HomeStack"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color }) => (
+            <HomeIcon height={30} width={30} fill={color} />
+          ),
+        }} />
+      <Tab.Screen
+        name="SettingsStack"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ color }) => (
+            <HomeIcon height={30} width={30} fill={color} />
+          ),
+        }} />
+    </Tab.Navigator>
+  )
+}
 
 const App = () => {
   const [global, setGlobal] = useGlobal();
   const [loading, isLoading] = React.useState(true)
 
-  const [state, dispatch] = React.useReducer(
-    (prevState: any, action: any) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    }
-  );
+
 
   React.useEffect(() => {
-
-    setGlobal({
-      userToken: null,
-      errors: {}
-    })
-    // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken;
+      console.log('token: ' + global.userToken);
 
-      try {
-        userToken = await AsyncStorage.getItem('userToken')
-        setGlobal({
-          userToken: userToken
-        })
-      } catch (e) {
-        // Restoring token failed
-      }
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
-      // dispatch({ type: 'RESTORE_TOKEN', token: userToken });
-    };
+      isLoading(false)
+    }
 
     setTimeout(() => {
-      isLoading(false)
-      bootstrapAsync();
+      bootstrapAsync()
     }, 2000);
 
   }, []);
 
-  const authContext = React.useMemo(
-    () => ({
-      signIn: (username: any, password: any) => {
-        let data = {
-          'login': username,
-          'password': password,
-        }
-        apiCall('POST', 'auth/login', data)
-          .then(res => {
-            const userToken = AsyncStorage.setItem('userToken', res.data.access_token)
-            setGlobal({
-              userToken: res.data.access_token
-            })
-            dispatch({ type: 'SIGN_IN', token: userToken });
-          })
-          .catch(err => {
-            console.log('arros' + JSON.stringify(err));
-
-            Alert.alert('Perhatian', 'harap ini form dengan benar')
-          })
-      },
-      signOut: () => {
-        resetGlobal()
-        AsyncStorage.clear()
-        dispatch({ type: 'SIGN_OUT' })
-      },
-      signUp: async (data: any) => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
-
-        // dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-      },
-    }),
-    []
-  );
   if (loading) {
     return (
       <SplashScreen />
@@ -131,39 +76,26 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
-      <AuthContext.Provider value={authContext}>
-        {getGlobal().userToken == null ? (
-          <AuthStack />
-        ) : (
-          <Tab.Navigator
-            initialRouteName="Feed"
-            screenOptions={{
-              tabBarShowLabel: false,
-              tabBarHideOnKeyboard: true
-            }}>
-            <Tab.Screen
-              name="HomeStack"
-              component={HomeScreen}
-              options={{
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color }) => (
-                  <HomeIcon height={30} width={30} fill={color} />
-                ),
-              }} />
-            <Tab.Screen
-              name="SettingsStack"
-              component={HomeScreen}
-              options={{
-                tabBarLabel: 'Settings',
-                tabBarIcon: ({ color }) => (
-                  <HomeIcon height={30} width={30} fill={color} />
-                ),
-              }} />
-          </Tab.Navigator>
-        )}
-      </AuthContext.Provider>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="AuthStack"
+          screenOptions={{
+            headerShown: false,
+            animation: 'slide_from_right'
+          }}>
+          {global.userToken == null ? (
+            <>
+              <Stack.Screen name="SignIn" component={SignInScreen} />
+              <Stack.Screen name="Register" component={RegisterScreen} />
+              <Stack.Screen name="Confirm" component={ConfirmScreen} />
+            </>
+          ) : (
+            <Stack.Screen name="HomeTab" component={HomeTab} />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 

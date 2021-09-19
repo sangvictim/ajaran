@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useGlobal, createProvider } from 'reactn';
 import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native';
 
-import { AuthContext } from '../../contexts/Contexts';
+// import { AuthContext } from '../../contexts/Contexts';
 
 const SignInScreen = ({ navigation }: any) => {
     const [loading, isLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const { signIn }: any = React.useContext(AuthContext);
+    const [global, setGlobal] = useGlobal()
 
+    const provider = createProvider();
+
+    // const { signIn }: any = React.useContext(AuthContext);
+    const signIn = (username: any, password: any) => {
+        setGlobal({
+            userToken: 'userToken',
+            loading: false
+        })
+        provider.global.userToken
+        isLoading(true)
+        console.log('token login: ' + global.userToken);
+    }
     return (
         <View>
             <Text>Sign In Screen</Text>
