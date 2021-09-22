@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect, useGlobal } from "reactn";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import display from "../../utils/display";
 
-const SplashScreen = () => {
+const SplashScreen = ({ navigation }: any) => {
+    const [global, setGlobal] = useGlobal()
+
+    useEffect(() => {
+
+        if (global.userToken != undefined) {
+            navigation.replace('App')
+        }
+        navigation.replace('SignIn')
+    }, [])
+
     return (
         <View style={styles.container}>
             <Text style={styles.logo}>Splash Screen</Text>

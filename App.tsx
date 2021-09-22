@@ -17,6 +17,7 @@ import SignInScreen from './src/screens/auth/SignInScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import RegisterScreen from './pages/auth/RegisterScreen';
 import ConfirmScreen from './src/screens/auth/ConfirmScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,47 +53,37 @@ function HomeTab() {
 
 const App = () => {
   const [global, setGlobal] = useGlobal();
-  const [loading, isLoading] = React.useState(true)
-
-
 
   React.useEffect(() => {
+    setGlobal({
+      userToken: undefined,
+      errors: {}
+    })
+
     const bootstrapAsync = async () => {
       console.log('token: ' + global.userToken);
-
-      isLoading(false)
     }
 
     setTimeout(() => {
+
       bootstrapAsync()
     }, 2000);
 
   }, []);
 
-  if (loading) {
-    return (
-      <SplashScreen />
-    )
-  }
-
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="AuthStack"
           screenOptions={{
             headerShown: false,
-            animation: 'slide_from_right'
+            animation: 'slide_from_left'
           }}>
-          {global.userToken == null ? (
-            <>
-              <Stack.Screen name="SignIn" component={SignInScreen} />
-              <Stack.Screen name="Register" component={RegisterScreen} />
-              <Stack.Screen name="Confirm" component={ConfirmScreen} />
-            </>
-          ) : (
-            <Stack.Screen name="HomeTab" component={HomeTab} />
-          )}
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Confirm" component={ConfirmScreen} />
+          <Stack.Screen name="App" component={HomeTab} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
