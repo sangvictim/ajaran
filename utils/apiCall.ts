@@ -1,15 +1,14 @@
-import { useGlobal } from 'reactn';
+import { getGlobal, setGlobal } from 'reactn';
 import axios from 'axios';
 
 type typeMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 const apiCall = async (method: typeMethod, url: string, data?: Partial<object> | null, param?: Partial<object> | null): Promise<any> => {
-    const [global, setGlobal] = useGlobal();
     return await axios({
-        baseURL: 'http://192.168.43.140:8000/',
+        baseURL: 'http://172.16.10.133:8000/',
         headers: {
             "Content-type": "application/json",
-            "Authorization": 'Bearer ' + global.userToken
+            "Authorization": 'Bearer ' + getGlobal().userToken
         },
         timeout: 5000,
         method: method,

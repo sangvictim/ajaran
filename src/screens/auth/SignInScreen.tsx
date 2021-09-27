@@ -15,16 +15,16 @@ const SignInScreen = ({ navigation }: any) => {
 
     // const { signIn }: any = React.useContext(AuthContext);
     const signIn = async (email: any, password: any) => {
-        // isLoading(true)
+        isLoading(true)
 
-        // await apiCall('POST', 'api/login', { email, password })
-        //     .then(res => {
-        //         console.log('token login: ' + res);
-        //     })
-        //     .catch(err => {
-        //         console.log('error su', err.message);
+        await apiCall('POST', 'api/login', { email, password })
+            .then(res => {
+                console.log('token login: ' + res);
+            })
+            .catch(err => {
+                console.log('error su', err.message);
 
-        //     })
+            })
 
         Alert.alert('xxx')
 
