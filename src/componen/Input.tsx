@@ -14,6 +14,7 @@ const text: React.FC<{
     type?: typeInput,
 
 }> = ({ name, label, placeholder, type, value, onChangeText }) => {
+
     return (
         <View style={styles.container}>
             <Label label={label} />

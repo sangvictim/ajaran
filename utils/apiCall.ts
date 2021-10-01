@@ -1,5 +1,6 @@
 import { getGlobal, setGlobal } from 'reactn';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type typeMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 

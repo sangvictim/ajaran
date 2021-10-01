@@ -35,6 +35,7 @@ export const HomeScreen = ({ navigation }: any) => {
         <View>
             <Text>HOME SCREEN</Text>
             <Text>ini hasil text input: {global.userName}</Text>
+            <Text>ini hasil token: {global.userToken}</Text>
             <Button onPress={() => signOut()} title="Signout" />
         </View>
     );

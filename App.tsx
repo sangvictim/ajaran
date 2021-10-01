@@ -58,7 +58,7 @@ const App = () => {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            animation: 'slide_from_left'
+            animation: 'slide_from_right'
           }}>
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="SignIn" component={SignInScreen} />

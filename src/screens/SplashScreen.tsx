@@ -8,7 +8,10 @@ const SplashScreen = ({ navigation }: any) => {
 
     useEffect(() => {
         async function getData() {
-            try {
+            let checkToken = await AsyncStorage.getItem('userToken');
+            console.log(checkToken != null);
+
+            if (checkToken != null) {
                 setGlobal({
                     userToken: await AsyncStorage.getItem('userToken'),
                     userNik: await AsyncStorage.getItem('userNik'),
@@ -16,7 +19,7 @@ const SplashScreen = ({ navigation }: any) => {
                     userEmail: await AsyncStorage.getItem('userEmail')
                 })
                 navigation.replace('App', { screen: 'HomeStack' })
-            } catch (error) {
+            } else {
                 navigation.replace('SignIn')
             }
         }
