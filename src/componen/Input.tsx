@@ -1,4 +1,4 @@
-import React, { useGlobal } from 'reactn'
+import React, { getGlobal } from 'reactn'
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import display from '../../utils/display';
 import Label from './Label';
@@ -14,9 +14,8 @@ const text: React.FC<{
     type?: typeInput,
 
 }> = ({ name, label, placeholder, type, value, onChangeText }) => {
-    const [global, setGlobal] = useGlobal();
     return (
-        <View>
+        <View style={styles.container}>
             <Label label={label} />
             <TextInput
                 placeholder={placeholder ? placeholder : label}
@@ -26,17 +25,23 @@ const text: React.FC<{
                 secureTextEntry={type == 'password' ? true : false}
 
             />
-            {global.errors[name] && (
-                <Text>{global.errors[name].message}</Text>
+            {getGlobal().errors[name] && (
+                <Text style={styles.errorLabel}>{getGlobal().errors[name]}</Text>
             )}
-            {/* <Text>{Object.keys((global.errors))[name]}</Text> */}
+            {/* <Text>{Object.keys((getGlobal().errors))[name]}</Text> */}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        marginBottom: display(16)
+    },
     textStyle: {
         fontSize: display(12)
+    },
+    errorLabel: {
+        color: 'red'
     }
 })
 

@@ -1,16 +1,26 @@
 import React, { useEffect, useGlobal } from "reactn";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import display from "../../utils/display";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SplashScreen = ({ navigation }: any) => {
     const [global, setGlobal] = useGlobal()
 
     useEffect(() => {
-
-        if (global.userToken != undefined) {
-            navigation.replace('App')
+        async function getData() {
+            try {
+                setGlobal({
+                    userToken: await AsyncStorage.getItem('userToken'),
+                    userNik: await AsyncStorage.getItem('userNik'),
+                    userName: await AsyncStorage.getItem('userName'),
+                    userEmail: await AsyncStorage.getItem('userEmail')
+                })
+                navigation.replace('App', { screen: 'HomeStack' })
+            } catch (error) {
+                navigation.replace('SignIn')
+            }
         }
-        navigation.replace('SignIn')
+        getData()
     }, [])
 
     return (
