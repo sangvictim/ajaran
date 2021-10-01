@@ -1,11 +1,13 @@
 import { getGlobal, setGlobal } from 'reactn';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type typeMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 const apiCall = async (method: typeMethod, url: string, data?: Partial<object> | null, param?: Partial<object> | null): Promise<any> => {
+
     return await axios({
-        baseURL: 'http://172.16.10.133:8000/',
+        baseURL: 'http://192.168.43.140:8000/',
         headers: {
             "Content-type": "application/json",
             "Authorization": 'Bearer ' + getGlobal().userToken
@@ -23,9 +25,9 @@ const apiCall = async (method: typeMethod, url: string, data?: Partial<object> |
         return res
     }).catch(err => {
         if (err.response != undefined) err = err.response.data
-        if (err.errors) {
+        if (err.data) {
             setGlobal({
-                errors: err.errors
+                errors: err.data
             })
         }
         throw err;

@@ -16,7 +16,7 @@ const text: React.FC<{
 }> = ({ name, label, placeholder, type, value, onChangeText }) => {
 
     return (
-        <View>
+        <View style={styles.container}>
             <Label label={label} />
             <TextInput
                 placeholder={placeholder ? placeholder : label}
@@ -27,16 +27,22 @@ const text: React.FC<{
 
             />
             {getGlobal().errors[name] && (
-                <Text>{getGlobal().errors[name].message}</Text>
+                <Text style={styles.errorLabel}>{getGlobal().errors[name]}</Text>
             )}
-            <Text>{Object.keys((getGlobal().errors))[name]}</Text>
+            {/* <Text>{Object.keys((getGlobal().errors))[name]}</Text> */}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        marginBottom: display(16)
+    },
     textStyle: {
         fontSize: display(12)
+    },
+    errorLabel: {
+        color: 'red'
     }
 })
 

@@ -1,9 +1,8 @@
 import React, { useState, useGlobal } from 'reactn';
-import { ActivityIndicator, Alert, Button, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Button, Text, View } from 'react-native';
 import apiCall from '../../../utils/apiCall';
 import Input from '../../componen/Input';
-
-// import { AuthContext } from '../../contexts/Contexts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = ({ navigation }: any) => {
     const [loading, isLoading] = useState(false);
@@ -12,35 +11,31 @@ const SignInScreen = ({ navigation }: any) => {
 
     const [global, setGlobal] = useGlobal()
 
-
-    // const { signIn }: any = React.useContext(AuthContext);
     const signIn = async (email: any, password: any) => {
         isLoading(true)
 
         await apiCall('POST', 'api/login', { email, password })
             .then(res => {
-                console.log('token login: ' + res);
+                res = res.data.data
+
+                setGlobal({
+                    userToken: res.access_token,
+                    userNik: res.nik,
+                    userName: res.name,
+                    userEmail: res.email,
+                    errors: {}
+                })
+
+                AsyncStorage.multiSet([
+                    ['userToken', res.access_token],
+                    ['userNik', res.nik],
+                    ['userName', res.name],
+                    ['userEmail', res.email]
+                ], navigation.replace('App', { screen: 'HomeStack' }))
             })
             .catch(err => {
-                console.log('error su', err.message);
-
+                isLoading(false)
             })
-
-        Alert.alert('xxx')
-
-        // setTimeout(() => {
-        //     setGlobal({
-        //         userToken: 'userToken',
-        //     })
-        //     if (global.userToken) {
-        //         navigation.replace('App')
-        //     } else {
-        //         navigation.replace('SignIn')
-        //     }
-
-
-        // }, 1000);
-
 
     }
     return (
