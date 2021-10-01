@@ -2,22 +2,17 @@ import React, { useGlobal } from 'reactn';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-//context
-// import { AuthContext } from './src/contexts/Contexts';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 //screen
 import SplashScreen from './src/screens/SplashScreen';
+import SignInScreen from './src/screens/auth/SignInScreen';
+import RegisterScreen from './pages/auth/RegisterScreen';
+import ConfirmScreen from './src/screens/auth/ConfirmScreen';
 import { HomeScreen } from './src/screens/user/HomeScreen';
 
 // icon
 import HomeIcon from './icon/home.svg';
-import apiCall from './utils/apiCall';
-import { Alert } from 'react-native';
-import SignInScreen from './src/screens/auth/SignInScreen';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import RegisterScreen from './pages/auth/RegisterScreen';
-import ConfirmScreen from './src/screens/auth/ConfirmScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,32 +47,18 @@ function HomeTab() {
 }
 
 const App = () => {
-  const [global, setGlobal] = useGlobal();
+  const [global, setGlobal] = useGlobal()
 
-  React.useEffect(() => {
-    setGlobal({
-      userToken: undefined,
-      errors: {}
-    })
-
-    const bootstrapAsync = async () => {
-      console.log('token: ' + global.userToken);
-    }
-
-    setTimeout(() => {
-
-      bootstrapAsync()
-    }, 2000);
-
-  }, []);
-
+  setGlobal({
+    errors: {}
+  })
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            animation: 'slide_from_left'
+            animation: 'slide_from_right'
           }}>
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="SignIn" component={SignInScreen} />
